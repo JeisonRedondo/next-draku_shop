@@ -1,16 +1,24 @@
 import { useRef } from 'react';
+import { useAuth } from '@hooks/useAuth';
+
+import Link from 'next/link';
 import Image from 'next/image';
 import { LockClosedIcon } from '@heroicons/react/24/solid';
 
 export default function LoginPage() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const auth = useAuth();
 
   const submitHandle = (event) => {
     event.preventDefault();
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+
+    auth.signIn(email, password).then(() => {
+      console.log('Login Success');
+    });
   };
 
   return (
@@ -66,9 +74,9 @@ export default function LoginPage() {
               </div>
 
               <div className="text-sm">
-                <a href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+                <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
                   Forgot your password?
-                </a>
+                </Link>
               </div>
             </div>
 
