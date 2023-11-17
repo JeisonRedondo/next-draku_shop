@@ -16,9 +16,17 @@ export default function LoginPage() {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
-    auth.signIn(email, password).then(() => {
-      console.log('Login Success');
-    });
+    auth
+      .signIn(email, password)
+      .then(() => {
+        auth.setError(null);
+      })
+      .catch((err) => {
+        console.log(err.response.status);
+        if (err.response?.status === 401) {
+          auth.setError('Invalid Username or Password');
+        }
+      });
   };
 
   return (
@@ -27,7 +35,7 @@ export default function LoginPage() {
         <div className="max-w-md w-full space-y-8">
           <div>
             {/*className = 'mx-auto h-12 w-auto'*/}
-            <Image src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" height={48} width="100%" style={{ margin: '10px auto' }} />
+            <Image src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" height={48} width="100%" />
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
           </div>
           <form className="mt-8 space-y-6" onSubmit={submitHandle}>
@@ -92,6 +100,11 @@ export default function LoginPage() {
               </button>
             </div>
           </form>
+          {auth.error && (
+            <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+              <span className="font-medium">Login Failed! {auth.error}</span>
+            </div>
+          )}
         </div>
       </div>
     </>
