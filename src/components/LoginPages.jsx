@@ -1,5 +1,6 @@
 import { useRef } from 'react';
 import { useAuth } from '@hooks/useAuth';
+import { useRouter } from 'next/router';
 
 import Link from 'next/link';
 import Image from 'next/image';
@@ -9,6 +10,7 @@ export default function LoginPage() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const auth = useAuth();
+  const router = useRouter();
 
   const submitHandle = (event) => {
     event.preventDefault();
@@ -19,6 +21,7 @@ export default function LoginPage() {
     auth
       .signIn(email, password)
       .then(() => {
+        router.push('/dashboard');
         auth.setError(null);
       })
       .catch((err) => {
@@ -35,7 +38,7 @@ export default function LoginPage() {
         <div className="max-w-md w-full space-y-8">
           <div>
             {/*className = 'mx-auto h-12 w-auto'*/}
-            <Image src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" alt="Workflow" height={48} width="100%" />
+            <Image alt="Workflow" height={48} width="100%" className="mx-auto h-12 w-auto" src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg" />
             <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
           </div>
           <form className="mt-8 space-y-6" onSubmit={submitHandle}>

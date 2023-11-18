@@ -1,14 +1,11 @@
 /* This example requires Tailwind CSS v2.0+ */
-import Image from 'next/image';
+import { useAuth } from '@hooks/useAuth';
+//import Image from 'next/image';
 import { Fragment } from 'react';
+
 import { Disclosure, Menu, Transition } from '@headlessui/react';
 import { BellIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 
-const userData = {
-  name: 'Tom Cook',
-  email: 'tom@example.com',
-  imageUrl: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-};
 const navigation = [
   { name: 'Dashboard', href: '#', current: true },
   { name: 'Productos', href: '/dashboard/products/', current: false },
@@ -25,6 +22,13 @@ function classNames(...classes) {
 }
 
 export default function Header() {
+  const auth = useAuth();
+
+  const userData = {
+    name: auth?.user?.name,
+    email: auth?.user?.email,
+    imageUrl: auth?.user?.avatar,
+  };
   return (
     <>
       <Disclosure as="nav" className="bg-gray-800">
@@ -34,7 +38,7 @@ export default function Header() {
               <div className="flex items-center justify-between h-16">
                 <div className="flex items-center">
                   <div className="flex-shrink-0">
-                    <Image className="h-8 w-8" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Workflow" width={32} height={32} />
+                    <img className="h-8 w-8" src="https://tailwindui.com/img/logos/workflow-mark-indigo-500.svg" alt="Workflow" />
                   </div>
                   <div className="hidden md:block">
                     <div className="ml-10 flex items-baseline space-x-4">
@@ -66,7 +70,7 @@ export default function Header() {
                       <div>
                         <Menu.Button className="max-w-xs bg-gray-800 rounded-full flex items-center text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white">
                           <span className="sr-only">Open user menu</span>
-                          <Image className="h-8 w-8 rounded-full" src={userData.imageUrl} alt="" height={32} width={32} />
+                          <img className="h-8 w-8 rounded-full" src={userData.imageUrl} alt="" />
                         </Menu.Button>
                       </div>
                       <Transition
@@ -120,7 +124,7 @@ export default function Header() {
               <div className="pt-4 pb-3 border-t border-gray-700">
                 <div className="flex items-center px-5">
                   <div className="flex-shrink-0">
-                    <Image className="h-10 w-10 rounded-full" src={userData.imageUrl} alt="" />
+                    <img className="h-10 w-10 rounded-full" src={userData.imageUrl} alt="" />
                   </div>
                   <div className="ml-3">
                     <div className="text-base font-medium leading-none text-white">{userData.name}</div>
