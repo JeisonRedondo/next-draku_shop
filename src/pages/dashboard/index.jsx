@@ -13,7 +13,7 @@ const people = [
 
 import useFetch from '@hooks/useFetch';
 import endPoints from '@services/api';
-import { forwardRef, useState } from 'react';
+import { useState } from 'react';
 
 const PRODUCT_LIMIT = 15;
 const PRODUCT_OFFSET = 15;
@@ -39,7 +39,6 @@ export default function Dashboard() {
   /* CONSOLE*/ console.log('Primeros 5: ', separateProducts);
 
   const [page, setPage] = useState(0);
-  const [liveProducts, setLiveProducts] = useState(separateProducts[page]);
 
   function changeToNextPage() {
     if (page + 1 === PAGES_AMOUNT) {
