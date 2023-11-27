@@ -1,19 +1,8 @@
 //import Image from 'next/image';
-
-const people = [
-  {
-    name: 'Jane Cooper',
-    title: 'Regional Paradigm Technician',
-    department: 'Optimization',
-    role: 'Admin',
-    email: 'jane.cooper@example.com',
-    image: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=4&w=256&h=256&q=60',
-  },
-];
-
 import useFetch from '@hooks/useFetch';
 import endPoints from '@services/api';
 import { useState } from 'react';
+import { Chart } from '@common/Chart';
 
 const PRODUCT_LIMIT = 15;
 const PRODUCT_OFFSET = 15;
@@ -25,7 +14,7 @@ export default function Dashboard() {
   const products = useFetch(endPoints.products.getProducts(PRODUCT_LIMIT, PRODUCT_OFFSET));
 
   //Separate products to present in layout
-  /* CONSOLE*/ console.log('Products: ', products); // Seapte
+  const productsToSeparate = [...products];
   const separateProducts = [];
 
   let startOf = 0;
@@ -36,7 +25,6 @@ export default function Dashboard() {
     startOf = startOf + PRODUCT_QUANTITY;
     finalOf = finalOf + PRODUCT_QUANTITY;
   }
-  /* CONSOLE*/ console.log('Primeros 5: ', separateProducts);
 
   const [page, setPage] = useState(0);
 
@@ -69,6 +57,7 @@ export default function Dashboard() {
 
       buttons.push(
         <button
+          key={pageNumber}
           className="relative inline-flex items-center px-4 py-2 text-sm font-semibold text-gray-900 ring-1 ring-inset ring-gray-300 hover:bg-gray-50 focus:z-20 focus:outline-offset-0 disabled:bg-blue-700 disabled:text-white"
           onClick={() => changeToThisPage(pageNumber)}
           disabled={isActive}
@@ -80,9 +69,29 @@ export default function Dashboard() {
 
     return buttons;
   }
-  1;
+
+  const categoryNames = products?.map((product) => product.category);
+  const categoryCount = categoryNames?.map((category) => category.name);
+
+  console.log('Category Names: ', categoryNames);
+  console.log('Category Count: ', categoryCount);
+
+  const countOccurrences = (arr) => arr.reduce((prev, curr) => ((prev[curr] = ++prev[curr] || 1), prev), {});
+
+  const data = {
+    datasets: [
+      {
+        label: 'Categories',
+        data: countOccurrences(categoryCount),
+        borderWidth: 2,
+        backgroundColor: ['#ffbb11', '#c0c0c0', '#50AF95', '#f3ba2f', '#2a71d0'],
+      },
+    ],
+  };
+
   return (
     <>
+      <Chart className="mb-8 mt-2" chartData={data} />
       <div className="flex flex-col">
         <div className="-my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
           <div className="py-2 align-middle inline-block min-w-full sm:px-6 lg:px-8">
@@ -116,7 +125,7 @@ export default function Dashboard() {
                       <td className="px-6 py-4 whitespace-nowrap">
                         <div className="flex items-center">
                           <div className="flex-shrink-0 h-10 w-10">
-                            <img className="h-10 w-10 rounded-full" src={product.images[0]} alt="" />{' '}
+                            <img className="h-10 w-10 rounded-full" src={product.images[0]} alt="" />
                           </div>
                           <div className="ml-4">
                             <div className="text-sm font-medium text-gray-900">{product.title}</div>

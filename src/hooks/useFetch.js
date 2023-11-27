@@ -6,6 +6,7 @@ const useFetch = (endpoint) => {
 
   async function fetchData() {
     const response = await axios.get(endpoint);
+    /*CONSOLE*/ console.log('Data: ', response.data);
     setData(response.data);
   }
 
