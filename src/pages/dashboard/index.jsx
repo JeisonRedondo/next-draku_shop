@@ -14,17 +14,24 @@ export default function Dashboard() {
   const products = useFetch(endPoints.products.getProducts(PRODUCT_LIMIT, PRODUCT_OFFSET));
 
   //Separate products to present in layout
-  const productsToSeparate = [...products];
-  const separateProducts = [];
 
-  let startOf = 0;
-  let finalOf = PRODUCT_QUANTITY;
+  function separateProductsByPages() {
+    const productsToSeparate = [...products];
+    const separateProducts = [];
 
-  for (let index = 0; index < PAGES_AMOUNT; index++) {
-    separateProducts[index] = products?.slice(startOf, finalOf);
-    startOf = startOf + PRODUCT_QUANTITY;
-    finalOf = finalOf + PRODUCT_QUANTITY;
+    let startOf = 0;
+    let finalOf = PRODUCT_QUANTITY;
+
+    for (let index = 0; index < PAGES_AMOUNT; index++) {
+      separateProducts[index] = productsToSeparate?.slice(startOf, finalOf);
+      startOf = startOf + PRODUCT_QUANTITY;
+      finalOf = finalOf + PRODUCT_QUANTITY;
+    }
+
+    return separateProducts;
   }
+
+  const separateProducts = separateProductsByPages();
 
   const [page, setPage] = useState(0);
 
@@ -70,11 +77,8 @@ export default function Dashboard() {
     return buttons;
   }
 
-  const categoryNames = products?.map((product) => product.category);
+  const categoryNames = separateProducts[page]?.map((product) => product.category);
   const categoryCount = categoryNames?.map((category) => category.name);
-
-  console.log('Category Names: ', categoryNames);
-  console.log('Category Count: ', categoryCount);
 
   const countOccurrences = (arr) => arr.reduce((prev, curr) => ((prev[curr] = ++prev[curr] || 1), prev), {});
 
