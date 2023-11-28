@@ -77,7 +77,7 @@ export default function Dashboard() {
     return buttons;
   }
 
-  const categoryNames = separateProducts[page]?.map((product) => product.category);
+  const categoryNames = products?.map((product) => product.category);
   const categoryCount = categoryNames?.map((category) => category.name);
 
   const countOccurrences = (arr) => arr.reduce((prev, curr) => ((prev[curr] = ++prev[curr] || 1), prev), {});
