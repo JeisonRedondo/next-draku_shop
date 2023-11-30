@@ -1,4 +1,5 @@
 import { useRef } from 'react';
+import { addProduct } from '@services/api/product';
 
 export default function FormProduct() {
   const formRef = useRef(null);
@@ -39,10 +40,10 @@ export default function FormProduct() {
     };
     const passedCheck = checkData(data);
 
-    console.log('Data: ', data);
-
     if (passedCheck) {
-      console.log('Producto correctamente Guardado');
+      addProduct(data).then((response) => {
+        console.log('response: ', response);
+      });
     }
   };
 
@@ -135,4 +136,3 @@ export default function FormProduct() {
     </form>
   );
 }
-
