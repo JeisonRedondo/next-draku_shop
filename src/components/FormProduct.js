@@ -1,8 +1,22 @@
-import { useRef } from 'react';
-import { addProduct } from '@services/api/product';
+import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/router';
+import { addProduct, updateProduct } from '@services/api/product';
 
 export default function FormProduct({ setOpen, setAlert, product }) {
   const formRef = useRef(null);
+  const router = useRouter();
+
+  const [categoryValue, setCategoryValue] = useState();
+  const [activeImages, setActiveImages] = useState(false)
+
+  useEffect(() => {
+    setCategoryValue(product?.category?.id.toString())
+    console.log(product.images);
+
+    if (product.images) {
+      setActiveImages(true)
+    }
+  }, []);
 
   const checkData = (data) => {
     let pass = true;
@@ -19,10 +33,10 @@ export default function FormProduct({ setOpen, setAlert, product }) {
       alert('La descripcion debe tener al menos 5 caracteres');
       pass = false;
     }
-    if (!data.images[0].match(/^.+\.(jpg|jpeg|png)$/g)) {
-      alert('Extension del archivo invalida');
-      pass = false;
-    }
+    // if (!data.images[0].match(/^.+\.(jpg|jpeg|png)$/g)) {
+    //   alert('Extension del archivo invalida');
+    //   pass = false;
+    // }
     return pass;
   };
 
@@ -36,29 +50,42 @@ export default function FormProduct({ setOpen, setAlert, product }) {
       price: parseInt(formData.get('price')),
       description: formData.get('description'),
       categoryId: parseInt(formData.get('category')),
-      images: [formData.get('images').name],
+      images: 
+      // [formData.get('images').name],
+      [        
+        "https://i.imgur.com/axsyGpD.jpeg",
+        "https://i.imgur.com/T8oq9X2.jpeg",
+        "https://i.imgur.com/J6MinJn.jpeg"
+    ],
     };
+
     const passedCheck = checkData(data);
 
-    if (passedCheck) {
-      addProduct(data)
-        .then(() => {
-          setAlert({
-            active: true,
-            message: 'Product added successfully',
-            type: 'success',
-            autoClose: false,
+    if (product) {
+      updateProduct(product.id, data).then((response) => {
+        router.push('/dashboard/products/')
+            });
+    } else {
+      if (passedCheck) {
+        addProduct(data)
+          .then(() => {
+            setAlert({
+              active: true,
+              message: 'Product added successfully',
+              type: 'success',
+              autoClose: false,
+            });
+            setOpen(false);
+          })
+          .catch((error) => {
+            setAlert({
+              active: true,
+              message: error.message,
+              type: 'error',
+              autoClose: false,
+            });
           });
-          setOpen(false);
-        })
-        .catch((error) => {
-          setAlert({
-            active: true,
-            message: error.message,
-            type: 'error',
-            autoClose: false,
-          });
-        });
+      }
     }
   };
 
@@ -98,9 +125,12 @@ export default function FormProduct({ setOpen, setAlert, product }) {
               <select
                 id="category"
                 name="category"
-                value={product?.category?.id.toString()}
                 autoComplete="category-name"
+                defaultValue={ product?.category}
                 className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                // onChange={(event) => { 
+                //   setCategoryValue(event.target.value)
+                // }}
               >
                 <option value="1">Clothes</option>
                 <option value="2">Electronics</option>
@@ -127,6 +157,13 @@ export default function FormProduct({ setOpen, setAlert, product }) {
               <div>
                 <label className="block text-sm font-medium text-gray-700">Cover photo</label>
                 <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
+                  { activeImages && (
+                    <div className="space-y-1 text-center">
+                      <img src={`${product.images[0]}`} alt="imag" className="h-10 w-10 rounded-full" />
+                      <img src={`${product.images[1]}`} alt="imag" className="h-10 w-10 rounded-full" />
+                      <img src={`${product.images[2]}`} alt="imag" className="h-10 w-10 rounded-full" />
+                    </div>
+                  )}
                   <div className="space-y-1 text-center">
                     <svg className="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48" aria-hidden="true">
                       <path
