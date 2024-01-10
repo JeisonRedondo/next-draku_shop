@@ -7,14 +7,14 @@ export default function FormProduct({ setOpen, setAlert, product }) {
   const router = useRouter();
 
   const [categoryValue, setCategoryValue] = useState();
-  const [activeImages, setActiveImages] = useState(false)
+  const [activeImages, setActiveImages] = useState(false);
 
   useEffect(() => {
-    setCategoryValue(product?.category?.id.toString())
+    setCategoryValue(product?.category?.id.toString());
     console.log(product.images);
 
     if (product.images) {
-      setActiveImages(true)
+      setActiveImages(true);
     }
   }, []);
 
@@ -50,21 +50,17 @@ export default function FormProduct({ setOpen, setAlert, product }) {
       price: parseInt(formData.get('price')),
       description: formData.get('description'),
       categoryId: parseInt(formData.get('category')),
-      images: 
-      // [formData.get('images').name],
-      [        
-        "https://i.imgur.com/axsyGpD.jpeg",
-        "https://i.imgur.com/T8oq9X2.jpeg",
-        "https://i.imgur.com/J6MinJn.jpeg"
-    ],
+      images:
+        // [formData.get('images').name],
+        ['https://i.imgur.com/axsyGpD.jpeg', 'https://i.imgur.com/T8oq9X2.jpeg', 'https://i.imgur.com/J6MinJn.jpeg'],
     };
 
     const passedCheck = checkData(data);
 
     if (product) {
       updateProduct(product.id, data).then((response) => {
-        router.push('/dashboard/products/')
-            });
+        router.push('/dashboard/products/');
+      });
     } else {
       if (passedCheck) {
         addProduct(data)
@@ -126,9 +122,9 @@ export default function FormProduct({ setOpen, setAlert, product }) {
                 id="category"
                 name="category"
                 autoComplete="category-name"
-                defaultValue={ product?.category}
+                defaultValue={product?.category}
                 className="mt-1 block w-full py-2 px-3 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                // onChange={(event) => { 
+                // onChange={(event) => {
                 //   setCategoryValue(event.target.value)
                 // }}
               >
@@ -157,7 +153,7 @@ export default function FormProduct({ setOpen, setAlert, product }) {
               <div>
                 <label className="block text-sm font-medium text-gray-700">Cover photo</label>
                 <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
-                  { activeImages && (
+                  {activeImages && (
                     <div className="space-y-1 text-center">
                       <img src={`${product.images[0]}`} alt="imag" className="h-10 w-10 rounded-full" />
                       <img src={`${product.images[1]}`} alt="imag" className="h-10 w-10 rounded-full" />
